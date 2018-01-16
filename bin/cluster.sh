@@ -26,6 +26,11 @@ scp -r "$ABS_DIR/post_extractor" "$SERVER_ADDR:~/ztnbd/post_extractor"
 
 ssh $SERVER_ADDR << SSH_SESS
 	cd ztnbd
+<<<<<<< HEAD
+=======
+	python3 -m pip install --user pyspark numpy
+
+>>>>>>> master
     jupyter nbconvert --to script $MAIN_SCRIPT.ipynb
 
     hdfs dfs -rm -r -f /user/TZ/wmleczek/ztnbd
@@ -33,8 +38,12 @@ ssh $SERVER_ADDR << SSH_SESS
 	hdfs dfs -copyFromLocal -f data/* /user/TZ/$SERVER_USER/ztnbd
 
 	echo "===================== $MAIN_SCRIPT.py ====================="
+<<<<<<< HEAD
 	export PYSPARK_PYTHON=/usr/bin/python3
 	export PYSPARK_DRIVER_PYTHON=/usr/bin/python3
 
 	python3 $MAIN_SCRIPT.py $SPARK_STREAM
+=======
+	python3 $MAIN_SCRIPT.py $SERVER_USER $SPARK_STREAM
+>>>>>>> master
 SSH_SESS

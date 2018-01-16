@@ -1,0 +1,20 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "3.6.4"
+
+[dev-packages]
+
+[packages]
+
+"spark" = "*"
+"pyspark" = "*"
+"bs4" = "*"
+numpy = "*"
+"html5lib" = "*"
+statistics = "*"
+sphinx = "*"
