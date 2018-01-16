@@ -21,17 +21,20 @@ SERVER_ADDR=$SERVER_USER@$SERVER_HOST
 
 ssh $SERVER_ADDR "rm -rf ~/ztnbd && mkdir ~/ztnbd 2>/dev/null"
 scp "$ABS_DIR/$MAIN_SCRIPT.ipynb" "$SERVER_ADDR:~/ztnbd/$MAIN_SCRIPT.ipynb"
-scp "$ABS_DIR/Pipfile" "$SERVER_ADDR:~/ztnbd/Pipfile"
-scp "$ABS_DIR/Pipfile.lock" "$SERVER_ADDR:~/ztnbd/Pipfile.lock"
-scp -r "$ABS_DIR/external" "$SERVER_ADDR:~/ztnbd/external"
+scp -r "$ABS_DIR/data" "$SERVER_ADDR:~/ztnbd/data"
 scp -r "$ABS_DIR/post_extractor" "$SERVER_ADDR:~/ztnbd/post_extractor"
 
 ssh $SERVER_ADDR << SSH_SESS
 	cd ztnbd
-	pipenv --python 3.6.4 install
-
     jupyter nbconvert --to script $MAIN_SCRIPT.ipynb
 
+    hdfs dfs -rm -r -f /user/TZ/wmleczek/ztnbd
+    hdfs dfs -mkdir -p /user/TZ/$SERVER_USER/ztnbd
+	hdfs dfs -copyFromLocal -f data/* /user/TZ/$SERVER_USER/ztnbd
+
 	echo "===================== $MAIN_SCRIPT.py ====================="
-	pipenv --python 3.6.4 run spark-submit --conf spark.ui.enabled=true $MAIN_SCRIPT.py $SERVER_USER $SPARK_STREAM]
+	export PYSPARK_PYTHON=/usr/bin/python3
+	export PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+
+	python3 $MAIN_SCRIPT.py $SPARK_STREAM
 SSH_SESS
