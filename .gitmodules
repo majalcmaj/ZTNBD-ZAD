@@ -1,0 +1,3 @@
+[submodule "post_extractor"]
+	path = post_extractor
+	url = https://github.com/pkprzekwas/post_extractor.git
